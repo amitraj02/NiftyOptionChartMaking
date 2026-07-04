@@ -1,0 +1,192 @@
+.container {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 24px;
+    margin: 10px 0;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.header {
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--bg-main);
+    padding-bottom: 12px;
+}
+
+.header h2 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+/* Dashboard Grid */
+.top-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+@media (min-width: 1024px) {
+    .top-section {
+        grid-template-columns: repeat(12, 1fr);
+    }
+    
+    .option-chain {
+        grid-column: span 12;
+    }
+    
+    .chart-section {
+        grid-column: span 12;
+    }
+    
+    .script-list {
+        grid-column: span 5;
+    }
+    
+    .result-section {
+        grid-column: span 7;
+    }
+}
+
+/* Option Chain Styles */
+.option-chain {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+@media (min-width: 768px) {
+    .option-chain {
+        grid-template-columns: 1fr 140px 1fr;
+    }
+}
+
+.call-list, .put-list {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.call-list {
+    border-left: 4px solid var(--color-call);
+    color: var(--color-call);
+}
+
+.put-list {
+    border-right: 4px solid var(--color-put);
+    color: var(--color-put);
+}
+
+.strike-list {
+    background-color: var(--bg-header);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+/* Charts Styles */
+.chart-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+@media (min-width: 768px) {
+    .chart-section {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.nifty-chart, .call-chart, .put-chart {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.nifty-chart {
+    color: var(--color-accent);
+    border-top: 3px solid var(--color-accent);
+}
+
+.call-chart {
+    color: var(--color-call);
+    border-top: 3px solid var(--color-call);
+}
+
+.put-chart {
+    color: var(--color-put);
+    border-top: 3px solid var(--color-put);
+}
+
+.nifty-chart:hover, .call-chart:hover, .put-chart:hover,
+.call-list:hover, .put-list:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.05);
+}
+
+/* Script & Result Styles */
+.script-list {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.result-section {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.result-section h4 {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+.result-box {
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 100px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
