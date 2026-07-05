@@ -1,0 +1,92 @@
+<div class="container" id="basicStructureContainer">
+    <div class="header">
+        <h2>Basic Structure</h2>
+    </div>
+    <div>
+
+        <div class="container">
+
+            <!-- Top Section -->
+            <div class="top-section">
+
+                <!-- Option Chain -->
+                <div class="option-chain">
+                    <!-- Row 1: Calls -->
+                    <div class="option-chain-cell call-cell">Call-3</div>
+                    <div class="option-chain-cell call-cell">Call-2</div>
+                    <div class="option-chain-cell call-cell">Call-1</div>
+                    <div class="option-chain-cell call-cell">Call</div>
+                    <div class="option-chain-cell call-cell">Call+1</div>
+                    <div class="option-chain-cell call-cell">Call+2</div>
+                    <div class="option-chain-cell call-cell">Call+3</div>
+
+                    <!-- Row 2: Strikes -->
+                    <div class="option-chain-cell strike-cell">ATM-3</div>
+                    <div class="option-chain-cell strike-cell">ATM-2</div>
+                    <div class="option-chain-cell strike-cell">ATM-1</div>
+                    <div class="option-chain-cell strike-cell font-bold">ATM</div>
+                    <div class="option-chain-cell strike-cell">ATM+1</div>
+                    <div class="option-chain-cell strike-cell">ATM+2</div>
+                    <div class="option-chain-cell strike-cell">ATM+3</div>
+
+                    <!-- Row 3: Puts -->
+                    <div class="option-chain-cell put-cell">Put-3</div>
+                    <div class="option-chain-cell put-cell">Put-2</div>
+                    <div class="option-chain-cell put-cell">Put-1</div>
+                    <div class="option-chain-cell put-cell">Put</div>
+                    <div class="option-chain-cell put-cell">Put+1</div>
+                    <div class="option-chain-cell put-cell">Put+2</div>
+                    <div class="option-chain-cell put-cell">Put+3</div>
+                </div>
+
+                <!-- Charts -->
+                <div class="chart-section">
+                    <div class="chart-column nifty-column">
+                        <div class="nifty-chart">
+                            Nifty Chart:<span id="niftychartinfo"> like :date  </span>
+                            <span id="niftychart">niftychart size: 500 x 400</span>
+                        </div>
+                        <div class="nifty-chart-bottom-note"> size:500 x 200 ,  some bottom note for nifty chart </div>
+                    </div>
+
+                    <div class="chart-column call-put-column">
+                        <div class="call-chart">
+                            Call Chart :<span id="callchartinfo">  like :strike+date+ce</span>
+                            <span id="callchart">callchart size: 500 x 300</span>
+                        </div>
+
+                        <div class="put-chart">
+                            Put Chart :<span id="putchartinfo"> like:strike+date+pe</span>
+                            <span id="putchart">putchart size: 500 x 300</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Script List -->
+                <div class="script-list">
+                    Scripts List : <select name="scriptList" id="scriptList">
+                        <option value="swing_low">swing_low</option>
+                        <option value="twoPM">twoPM</option>
+                        <option value="otherone">otherone</option>
+                    </select>
+                    <!-- Scripts List ul> 1. swing_low, 2. twoPM 3. otherone :with check box  -->
+                    <label><input type="checkbox"> swing_low</label>
+                    <label><input type="checkbox"> twoPM</label>
+                    <label><input type="checkbox"> otherone</label>
+                </div>
+
+                <!-- Result -->
+                <div class="result-section">
+                    <h4>Result</h4>
+
+                    <div class="result-box">
+                        Show test result here...
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
