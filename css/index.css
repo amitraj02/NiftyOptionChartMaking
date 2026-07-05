@@ -44,9 +44,9 @@ body {
 }
 
 div {
-    /* border-radius: 10px; */
+    border-radius: 10px;
     /* padding: 5px 5px 5px 5px; */
-    box-shadow: inset 0px 0px 10px rgb(10, 10, 10);
+    /* box-shadow: inset 0px 0px 10px rgb(10, 10, 10); */
 }
 
 /* Scrollbar Styling */
@@ -85,7 +85,28 @@ div {
     letter-spacing: -0.025em;
     background: linear-gradient(135deg, #1e293b 30%, #2563eb 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.header-time {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background-color: var(--bg-main);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    box-shadow: none;
+    /* Override default box shadow for divs */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#headerTime {
+    font-weight: 600;
+    color: var(--color-accent);
 }
 
 /* Navigation */
@@ -133,16 +154,16 @@ div {
 /* Main Body Container */
 .mainbody {
     flex: 1;
-    padding: 24px;
+    padding: 4px;
     max-width: 1500px;
     max-height: 1000px;
     overflow-x: auto;
     overflow-y: scroll;
-    margin: 5px;
+    margin: 0px;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    background-color: #64748b;
+    background-color: #d4d6d8;
 }
 
 /* Footer */

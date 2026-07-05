@@ -1,6 +1,6 @@
 #home-container,
 .home-container {
-    background-color: var(--bg-card);
+    background-color:rgb(120, 117, 117);
     border: 1px solid var(--border-color);
     padding: 24px;
     width: 100%;

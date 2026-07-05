@@ -15,7 +15,8 @@
 <body>
     <!-- HEADER SECTION -->
     <div id="header">
-        <h2>this the hearder</h2>
+        <h2>Nifty Option Chart Making</h2>
+        <div class="header-time">Time: <span id="headerTime">--:--:--</span></div>
     </div>
     <!-- END HEADER SECTION -->
 
@@ -46,6 +47,17 @@
 
     <script src="../js/clientInfo.js"></script>
     <script type="module" src="../js/router.js"></script>
+    <script>
+        function updateClock() {
+            const timeSpan = document.getElementById('headerTime');
+            if (timeSpan) {
+                const now = new Date();
+                timeSpan.textContent = now.toLocaleTimeString();
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
 
 </body>
 
