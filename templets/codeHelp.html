@@ -229,6 +229,21 @@
                         <td class="item-type">JS Function</td>
                         <td class="item-desc">Fetches local config file env.txt and inserts broker account portfolio stock details on the home screen.</td>
                     </tr>
+                    <tr>
+                        <td><code>resampleCandles()</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Resamples fetched HOLC candles into 1m, 3m, or 5m intervals for the index chart panel.</td>
+                    </tr>
+                    <tr>
+                        <td><code>loadIndexChart()</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Loads the selected date's index candles into the analysis page chart area and respects the chosen time interval.</td>
+                    </tr>
+                    <tr>
+                        <td><code>loadOptionChart()</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Loads a selected strike's CE/PE chart when the user clicks the option chain cells.</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -249,6 +264,11 @@
                         <td><code>get_db_info()</code></td>
                         <td class="item-type">Python Function</td>
                         <td class="item-desc">Queries SQLite database schema to count entries, list unique strikes, indexes, and expiries.</td>
+                    </tr>
+                    <tr>
+                        <td><code>get_analysis_details()</code></td>
+                        <td class="item-type">Python Function</td>
+                        <td class="item-desc">Returns index name, day range, ATM-based strike list, and option presence data for the selected date from the local SQLite database.</td>
                     </tr>
                     <tr>
                         <td><code>do_GET()</code></td>
