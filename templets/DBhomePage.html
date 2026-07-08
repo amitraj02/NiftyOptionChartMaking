@@ -15,20 +15,46 @@
         <button class="year-button" onclick="openDBcalander('2027')">2027</button>
         <button class="year-button" onclick="openDBcalander('2028')">2028</button>
 
-        <!-- create a js function for it -->
-        <script>
-            // create db con
-        </script>
-
     </div>
-    <div>
-        <div><h3>local database information</h3></div>
-        <div>
-            <div><h3>total entries</h3></div>
-            <div><h3 id="totalEntries"></h3></div>  
-            name of indexes ,strikes,dates of trading days, list of expiry date, total records, total options data
-            store in index,
-            <div>/Users/amitraj/git_repo_project/niftyOptionChartMaking/NiftyOptionChartMaking/database/LocalDatabase.db</div>
+    
+    <div class="db-info-section">
+        <div class="db-info-header">
+            <h3>Local Database Information</h3>
+            <span class="db-path">/Users/amitraj/git_repo_project/niftyOptionChartMaking/NiftyOptionChartMaking/database/LocalDatabase.db</span>
+        </div>
+        
+        <div class="db-stats-grid">
+            <div class="db-stat-card">
+                <span class="stat-label">Total Entries</span>
+                <span id="totalEntries" class="stat-val">-</span>
+            </div>
+            <div class="db-stat-card">
+                <span class="stat-label">Total Records</span>
+                <span id="totalRecords" class="stat-val">-</span>
+            </div>
+            <div class="db-stat-card">
+                <span class="stat-label">Total Options Data</span>
+                <span id="totalOptionsData" class="stat-val">-</span>
+            </div>
+        </div>
+
+        <div class="db-details-list">
+            <div class="db-detail-item">
+                <span class="detail-label">Indexes Available</span>
+                <span id="dbIndexes" class="detail-value">-</span>
+            </div>
+            <div class="db-detail-item">
+                <span class="detail-label">Expiry Dates</span>
+                <span id="dbExpiries" class="detail-value">-</span>
+            </div>
+            <div class="db-detail-item">
+                <span class="detail-label">Trading Days Covered</span>
+                <span id="dbTradingDays" class="detail-value">-</span>
+            </div>
+            <div class="db-detail-item">
+                <span class="detail-label">Strikes Covered</span>
+                <span id="dbStrikes" class="detail-value">-</span>
+            </div>
         </div>
     </div>
 </div>

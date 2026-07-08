@@ -1,0 +1,271 @@
+
+-------------------------------------------------------
+chart modal:
+<div id="chart-modal" class="modal-overlay" style="z-index: 1002;">
+<div id="chart-container" style="width: 100%; height: 500px;"></div>
+<div id="chart-loading" style="display: none; ...">Loading data...</div>
+
+Key functions:
+
+date setup and window.chartTargetInfo
+displayNiftyChart()
+Relevant code:
+-------------------------------------------------------
+let chartInstance = null;
+let candleSeries = null;
+
+async function displayNiftyChart() {
+    const { year, monthIndex, day } = window.chartTargetInfo;
+    if (!year) return;
+
+    const formattedMonth = String(monthIndex + 1).padStart(2, '0');
+    const formattedDay = String(day).padStart(2, '0');
+    const targetDateStr = `${year}-${formattedMonth}-${formattedDay}`;
+
+    const container = document.getElementById('chart-container');
+    container.style.display = 'block';
+    container.innerHTML = '';
+
+    const loading = document.getElementById('chart-loading');
+    loading.style.display = 'block';
+
+    try {
+        const response = await fetch('index_HOLC_data/NIFTY_HOLC.csv');
+        const text = await response.text();
+        const lines = text.split('\n');
+
+        const chartData = [];
+
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+
+            if (line.startsWith(targetDateStr)) {
+                const cols = line.split(',');
+                if (cols.length >= 5) {
+                    const datetime = cols[0];
+                    const timeUTC = datetime.split(' ')[1];
+                    const [h, m, s] = timeUTC.split(':').map(Number);
+
+                    const dateObj = new Date(Date.UTC(2000, 0, 1, h, m, s));
+                    const istTimeMs = dateObj.getTime() + (5.5 * 60 * 60 * 1000);
+                    const istDateObj = new Date(istTimeMs);
+                    const istHours = istDateObj.getUTCHours();
+                    const istMinutes = istDateObj.getUTCMinutes();
+
+                    const timestamp = Math.floor(Date.UTC(year, monthIndex, day, istHours, istMinutes, s) / 1000);
+
+                    chartData.push({
+                        time: timestamp,
+                        open: parseFloat(cols[1]),
+                        high: parseFloat(cols[2]),
+                        low: parseFloat(cols[3]),
+                        close: parseFloat(cols[4])
+                    });
+                }
+            }
+        }
+
+        loading.style.display = 'none';
+
+        if (chartData.length === 0) {
+            container.innerHTML = '<div style="padding: 20px; text-align: center; color: white;">No chart data available for this date.</div>';
+            return;
+        }
+
+        chartData.sort((a, b) => a.time - b.time);
+
+        const uniqueChartData = [];
+        for (let i = 0; i < chartData.length; i++) {
+            if (i === 0 || chartData[i].time !== chartData[i - 1].time) {
+                uniqueChartData.push(chartData[i]);
+            }
+        }
+
+        chartInstance = LightweightCharts.createChart(container, {
+            width: container.clientWidth,
+            height: container.clientHeight || 400,
+            layout: {
+                background: { type: 'solid', color: '#1E222D' },
+                textColor: '#d1d4dc',
+            },
+            grid: {
+                vertLines: { color: 'rgba(43, 43, 67, 0.5)' },
+                horzLines: { color: 'rgba(43, 43, 67, 0.5)' },
+            },
+            crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+            rightPriceScale: { borderColor: 'rgba(43, 43, 67, 0.5)' },
+            timeScale: {
+                borderColor: 'rgba(43, 43, 67, 0.5)',
+                timeVisible: true,
+                secondsVisible: false,
+            },
+        });
+
+        candleSeries = chartInstance.addCandlestickSeries({
+            title: 'Nifty 50',
+            upColor: '#26a69a',
+            downColor: '#ef5350',
+            borderDownColor: '#ef5350',
+            borderUpColor: '#26a69a',
+            wickDownColor: '#ef5350',
+            wickUpColor: '#26a69a',
+            priceFormat: {
+                type: 'price',
+                precision: 2,
+                minMove: 0.05,
+            }
+        });
+
+        candleSeries.setData(uniqueChartData);
+        chartInstance.timeScale().fitContent();
+
+        container.scrollIntoView({ behavior: 'smooth' });
+
+    } catch (e) {
+        console.error(e);
+        loading.innerText = 'Error loading chart data.';
+    }
+}
+-------------------------------------------------------
+
+This is the modal chart logic for analysis_2026.html.
+
+Key functions:
+
+displayNiftyChart()
+closeChartModal()
+-------------------------------------------------------
+function closeChartModal() {
+    document.getElementById('chart-modal').style.display = 'none';
+    if (chartInstance) {
+        chartInstance.remove();
+        chartInstance = null;
+        candleSeries = null;
+    }
+}
+
+async function displayNiftyChart() {
+    if (!currentSelectedDateObj) return;
+
+    const modal = document.getElementById('chart-modal');
+    if (modal) modal.style.display = 'flex';
+
+    const container = document.getElementById('chart-container');
+    if (container) container.innerHTML = '';
+
+    const loading = document.getElementById('chart-loading');
+    if (loading) loading.style.display = 'block';
+
+    const { year, monthIndex, day } = currentSelectedDateObj;
+    const formattedMonth = String(monthIndex + 1).padStart(2, '0');
+    const formattedDay = String(day).padStart(2, '0');
+    const targetDateStr = `${year}-${formattedMonth}-${formattedDay}`;
+
+    const title = document.getElementById('chart-modal-title');
+    if (title) title.innerText = `Nifty 50 Chart - ${targetDateStr}`;
+
+    try {
+        const response = await fetch('index_HOLC_data/NIFTY_HOLC.csv');
+        const text = await response.text();
+        const lines = text.split('\n');
+
+        const chartData = [];
+
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+
+            if (line.startsWith(targetDateStr)) {
+                const cols = line.split(',');
+                if (cols.length >= 5) {
+                    const datetime = cols[0];
+                    const timeUTC = datetime.split(' ')[1];
+                    const [h, m, s] = timeUTC.split(':').map(Number);
+
+                    const dateObj = new Date(Date.UTC(2000, 0, 1, h, m, s));
+                    const istTimeMs = dateObj.getTime() + (5.5 * 60 * 60 * 1000);
+                    const istDateObj = new Date(istTimeMs);
+                    const istHours = istDateObj.getUTCHours();
+                    const istMinutes = istDateObj.getUTCMinutes();
+
+                    const timestamp = Math.floor(Date.UTC(year, monthIndex, day, istHours, istMinutes, s) / 1000);
+
+                    chartData.push({
+                        time: timestamp,
+                        open: parseFloat(cols[1]),
+                        high: parseFloat(cols[2]),
+                        low: parseFloat(cols[3]),
+                        close: parseFloat(cols[4])
+                    });
+                }
+            }
+        }
+
+        if (loading) loading.style.display = 'none';
+
+        if (chartData.length === 0) {
+            container.innerHTML = '<div style="padding: 20px; text-align: center; color: white;">No chart data available for this date.</div>';
+            return;
+        }
+
+        chartData.sort((a, b) => a.time - b.time);
+
+        const uniqueChartData = [];
+        for (let i = 0; i < chartData.length; i++) {
+            if (i === 0 || chartData[i].time !== chartData[i - 1].time) {
+                uniqueChartData.push(chartData[i]);
+            }
+        }
+
+        chartInstance = LightweightCharts.createChart(container, {
+            width: container.clientWidth,
+            height: 500,
+            layout: {
+                background: { type: 'solid', color: '#1E222D' },
+                textColor: '#d1d4dc',
+            },
+            grid: {
+                vertLines: { color: 'rgba(43, 43, 67, 0.5)' },
+                horzLines: { color: 'rgba(43, 43, 67, 0.5)' },
+            },
+            crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+            rightPriceScale: { borderColor: 'rgba(43, 43, 67, 0.5)' },
+            timeScale: {
+                borderColor: 'rgba(43, 43, 67, 0.5)',
+                timeVisible: true,
+                secondsVisible: false,
+            },
+        });
+
+        candleSeries = chartInstance.addCandlestickSeries({
+            title: 'Nifty 50',
+            upColor: '#26a69a',
+            downColor: '#ef5350',
+            borderDownColor: '#ef5350',
+            borderUpColor: '#26a69a',
+            wickDownColor: '#ef5350',
+            wickUpColor: '#26a69a',
+            priceFormat: {
+                type: 'price',
+                precision: 2,
+                minMove: 0.05,
+            }
+        });
+
+        candleSeries.setData(uniqueChartData);
+        chartInstance.timeScale().fitContent();
+
+    } catch (e) {
+        console.error(e);
+        if (loading) loading.style.display = 'none';
+        if (container) container.innerHTML = `<div style="padding: 20px; text-align: center; color: red;">Error loading data: ${e.message}</div>`;
+    }
+}
+-------------------------------------------------------
+button that triggers chart rendering:
+<button class="chart_btn" onclick="displayNiftyChart()">Show Chart</button>
+chart container:
+<div id="chart-container" style="width: 100%; height: 100%; min-height: 400px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+
+-------------------------------------------------------

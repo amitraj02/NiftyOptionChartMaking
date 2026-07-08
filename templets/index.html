@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
 
     <title>Nifty Option Chart Making</title>
 
@@ -41,10 +42,14 @@
     <div id="footer">
         <h3>this is the footer</h3>
         <p>&copy; 2026 trading backtest Project. All rights reserved.</p>
+        
     </div>
     <!-- END FOOTER SECTION -->
 
     <script src="../js/clientInfo.js"></script>
+    <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: false, theme: 'dark', themeVariables: { primaryColor: '#3b82f6', primaryTextColor: '#f1f5f9', lineColor: '#94a3b8', secondaryColor: '#1e293b', tertiaryColor: '#0f172a' } });</script>
     <script type="module" src="../js/router.js"></script>
     <script>
         function updateClock() {

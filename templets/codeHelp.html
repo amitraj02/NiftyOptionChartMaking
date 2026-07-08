@@ -3,82 +3,469 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Help and Reference</title>
+    <title>Code Help and Reference Dictionary</title>
     <style>
+        :root {
+            --bg-main: #f0f4f8;
+            --bg-card: #ffffff;
+            --border-color: #dbeafe;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --color-accent: #2563eb;
+            --color-accent-bg: rgba(37, 99, 235, 0.05);
+            --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            margin: 20px;
-            background-color: #f9f9fa;
-            color: #333;
+            font-family: var(--font-family);
+            margin: 24px;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.5;
         }
+
+        .container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 20px -2px rgba(37, 99, 235, 0.08);
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
         h1 {
-            color: #2c3e50;
+            color: var(--text-primary);
+            font-size: 1.75rem;
+            font-weight: 800;
+            border-bottom: 2px solid var(--bg-main);
+            padding-bottom: 12px;
+            margin: 0;
         }
+
+        h2 {
+            color: var(--color-accent);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-top: 12px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
         }
+
         th, td {
-            border: 1px solid #e0e0e0;
-            padding: 12px;
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
             text-align: left;
+            font-size: 0.9rem;
         }
+
         th {
-            background-color: #f2f4f8;
-            font-weight: bold;
-            color: #444;
+            background-color: var(--color-accent-bg);
+            font-weight: 700;
+            color: var(--color-accent);
+            width: 25%;
         }
+
+        td.item-type {
+            font-weight: 600;
+            color: var(--text-secondary);
+            width: 20%;
+        }
+
+        td.item-desc {
+            color: var(--text-secondary);
+        }
+
         code {
-            background-color: #eef1f5;
+            background-color: var(--bg-main);
             padding: 3px 6px;
             border-radius: 4px;
             font-family: monospace;
             color: #d63384;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
-    <h1>Code Help and Reference</h1>
-    <p>This file stores all functions, HTML tags, CSS classes/properties, etc., used to develop the web project in a tabular format with a one-line explanation.</p>
+    <div class="container">
+        <div>
+            <h1>Code Help and Reference Dictionary</h1>
+            <p>This file documents all files, functions, HTML tags, variables, and CSS properties utilized inside the Nifty Option Chart Making project, with a single-line simple explanation for each.</p>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Item Name</th>
-                <th>Type</th>
-                <th>Explanation</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><code>index.html</code></td>
-                <td>File</td>
-                <td>Main entry point for the web application.</td>
-            </tr>
-            <tr>
-                <td><code>home.html</code></td>
-                <td>File</td>
-                <td>Home page template.</td>
-            </tr>
-            <tr>
-                <td><code>script.js</code></td>
-                <td>File</td>
-                <td>Main JavaScript file containing application logic.</td>
-            </tr>
-            <tr>
-                <td><code>todo.md</code></td>
-                <td>File</td>
-                <td>Task tracker and sequence log for the project.</td>
-            </tr>
-            <tr>
-                <td><code>codeHelp.html</code></td>
-                <td>File</td>
-                <td>Reference HTML file for project code, tags, and CSS.</td>
-            </tr>
-        </tbody>
-    </table>
+        <!-- SECTION 1: PROJECT FILES -->
+        <div>
+            <h2>1. Project Files & Databases</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Type</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>index.html</code></td>
+                        <td class="item-type">HTML File</td>
+                        <td class="item-desc">Main entry point container loaded by the browser, holding navigation headers and scripts.</td>
+                    </tr>
+                    <tr>
+                        <td><code>home.html</code></td>
+                        <td class="item-type">HTML Template</td>
+                        <td class="item-desc">Home view displaying credentials metadata and user stock holdings fetched from the broker.</td>
+                    </tr>
+                    <tr>
+                        <td><code>basicStructure.html</code></td>
+                        <td class="item-type">HTML Template</td>
+                        <td class="item-desc">Displays the Nifty, Call, and Put options charts along with the symmetrical 3x7 option chain grid.</td>
+                    </tr>
+                    <tr>
+                        <td><code>DBhomePage.html</code></td>
+                        <td class="item-type">HTML Template</td>
+                        <td class="item-desc">Tab view displaying select options for trading years and details of database records.</td>
+                    </tr>
+                    <tr>
+                        <td><code>DBcalander.html</code></td>
+                        <td class="item-type">HTML Template</td>
+                        <td class="item-desc">Template hosting the dynamically generated 12-month calendar grid view.</td>
+                    </tr>
+                    <tr>
+                        <td><code>LocalDatabase.db</code></td>
+                        <td class="item-type">SQLite Database</td>
+                        <td class="item-desc">Database holding historical option chain rates and underling index values.</td>
+                    </tr>
+                    <tr>
+                        <td><code>server.py</code></td>
+                        <td class="item-type">Python Server</td>
+                        <td class="item-desc">Handles local file serving, CORS credentials forwarding, and local SQLite data queries.</td>
+                    </tr>
+                    <tr>
+                        <td><code>router.js</code></td>
+                        <td class="item-type">JavaScript Route Loader</td>
+                        <td class="item-desc">Intercepts browser hashes to fetch and inject templates, and runs page-specific initialization scripts.</td>
+                    </tr>
+                    <tr>
+                        <td><code>clientInfo.js</code></td>
+                        <td class="item-type">JavaScript Controller</td>
+                        <td class="item-desc">Manages credentials validation and renders stocks holdings table on the Home page.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 2: JAVASCRIPT FUNCTIONS -->
+        <div>
+            <h2>2. JavaScript Functions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Type</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>updateClock()</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Updates the navigation header time panel with the client's current local time string.</td>
+                    </tr>
+                    <tr>
+                        <td><code>handleLocation()</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Parses the URL hash and dynamic query parameters to render the matching page template.</td>
+                    </tr>
+                    <tr>
+                        <td><code>fetchTradingDays(year)</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Loads the specified year's Nifty CSV file to populate a lookup Set of active trading dates.</td>
+                    </tr>
+                    <tr>
+                        <td><code>renderDBCalendar(year, tradingDays)</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Dynamically builds calendar card days with classes indicating weekends, trading days, and market holidays.</td>
+                    </tr>
+                    <tr>
+                        <td><code>fetchDBInfo()</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Fetches database counts and unique value ranges from the backend server to populate the dashboard.</td>
+                    </tr>
+                    <tr>
+                        <td><code>openDBcalander(year)</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Global helper modifying browser URL hash parameters to trigger calendar views.</td>
+                    </tr>
+                    <tr>
+                        <td><code>fetchDhanUserProfile(clientId, accessToken)</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Makes a profile query request to the broker API endpoints.</td>
+                    </tr>
+                    <tr>
+                        <td><code>fetchDhanHoldings(clientId, accessToken)</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Makes a stock portfolio holdings query request to the broker API endpoints.</td>
+                    </tr>
+                    <tr>
+                        <td><code>renderHome()</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Fetches local config file env.txt and inserts broker account portfolio stock details on the home screen.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 3: PYTHON FUNCTIONS -->
+        <div>
+            <h2>3. Python Backend Functions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Type</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>get_db_info()</code></td>
+                        <td class="item-type">Python Function</td>
+                        <td class="item-desc">Queries SQLite database schema to count entries, list unique strikes, indexes, and expiries.</td>
+                    </tr>
+                    <tr>
+                        <td><code>do_GET()</code></td>
+                        <td class="item-type">Python Method</td>
+                        <td class="item-desc">Handles incoming HTTP GET requests for static files, /db_info stats, or proxies /api/ calls.</td>
+                    </tr>
+                    <tr>
+                        <td><code>do_POST()</code></td>
+                        <td class="item-type">Python Method</td>
+                        <td class="item-desc">Handles incoming HTTP POST requests, proxying them to Dhan credentials endpoints.</td>
+                    </tr>
+                    <tr>
+                        <td><code>handle_proxy(target_url, method)</code></td>
+                        <td class="item-type">Python Function</td>
+                        <td class="item-desc">Forwards local credentials requests to dhan.co servers and passes back responses.</td>
+                    </tr>
+                    <tr>
+                        <td><code>send_cors_headers(origin)</code></td>
+                        <td class="item-type">Python Function</td>
+                        <td class="item-desc">Appends CORS access control policy details on responses to allow local scripting.</td>
+                    </tr>
+                    <tr>
+                        <td><code>load_credentials()</code></td>
+                        <td class="item-type">Python Function</td>
+                        <td class="item-desc">Extracts access keys and user codes from env config texts.</td>
+                    </tr>
+                    <tr>
+                        <td><code>get_holdings(dhan)</code></td>
+                        <td class="item-type">Python Function</td>
+                        <td class="item-desc">Downloads stocks details from broker via SDK and prints them to terminal.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 4: VARIABLES -->
+        <div>
+            <h2>4. Essential Variables & Constants</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Type</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>routes</code></td>
+                        <td class="item-type">JS Object</td>
+                        <td class="item-desc">Dictionary mapping browser hash paths to matching template file names.</td>
+                    </tr>
+                    <tr>
+                        <td><code>PORT</code></td>
+                        <td class="item-type">Python Int</td>
+                        <td class="item-desc">Static variable configuring the local web server port number (8000).</td>
+                    </tr>
+                    <tr>
+                        <td><code>DHAN_CLIENT_ID</code></td>
+                        <td class="item-type">String</td>
+                        <td class="item-desc">Dhan broker account client identification key.</td>
+                    </tr>
+                    <tr>
+                        <td><code>DHAN_ACCESS_TOKEN</code></td>
+                        <td class="item-type">String</td>
+                        <td class="item-desc">Authentication JWT security token for Dhan HQ API.</td>
+                    </tr>
+                    <tr>
+                        <td><code>monthNames</code></td>
+                        <td class="item-type">JS Array</td>
+                        <td class="item-desc">String list of months names used to render headings on calendar cards.</td>
+                    </tr>
+                    <tr>
+                        <td><code>daysOfWeek</code></td>
+                        <td class="item-type">JS Array</td>
+                        <td class="item-desc">String list containing initials of weekdays to build grid headers.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 5: HTML TAGS -->
+        <div>
+            <h2>5. HTML Tags Used in Layouts</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Type</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>&lt;div&gt;</code></td>
+                        <td class="item-type">Block Tag</td>
+                        <td class="item-desc">Common wrapper tag creating cards, sections, layouts, and division boundaries.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;span&gt;</code></td>
+                        <td class="item-type">Inline Tag</td>
+                        <td class="item-desc">Inline container tag displaying labels, greeks numbers, and metadata badges.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;nav&gt;</code></td>
+                        <td class="item-type">Structural Tag</td>
+                        <td class="item-desc">Organizes nav containers containing links to shift dashboard pages.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;ul&gt; &lt;li&gt;</code></td>
+                        <td class="item-type">List Tags</td>
+                        <td class="item-desc">Wraps individual items forming tabs selectors inside navigation bars.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;a&gt;</code></td>
+                        <td class="item-type">Anchor Tag</td>
+                        <td class="item-desc">Clickable hyperlinks updating window hash states to switch SPA tabs.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;button&gt;</code></td>
+                        <td class="item-type">Action Tag</td>
+                        <td class="item-desc">Interactions trigger that fires functions (like calendar redirects or back controls).</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;select&gt; &lt;option&gt;</code></td>
+                        <td class="item-type">Form Tags</td>
+                        <td class="item-desc">Form dropdown selection menus listing script choices.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;label&gt; &lt;input&gt;</code></td>
+                        <td class="item-type">Form Tags</td>
+                        <td class="item-desc">Clickable text labels and checkbox selections to filter trading properties.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;table&gt; &lt;tr&gt; &lt;td&gt;</code></td>
+                        <td class="item-type">Table Tags</td>
+                        <td class="item-desc">Formats data rows, header titles, and stats grids into structured tables.</td>
+                    </tr>
+                    <tr>
+                        <td><code>&lt;h2&gt; &lt;h3&gt; &lt;h4&gt;</code></td>
+                        <td class="item-type">Semantic Tags</td>
+                        <td class="item-desc">Represents headings and section labels of varying size hierarchy.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 6: CSS CLASSES -->
+        <div>
+            <h2>6. CSS Classes & Layout Styles</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Type</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>.option-chain</code></td>
+                        <td class="item-type">CSS Grid</td>
+                        <td class="item-desc">Symmetrical 3x7 layout grid displaying Call, ATM, and Put option parameters.</td>
+                    </tr>
+                    <tr>
+                        <td><code>.chart-section</code></td>
+                        <td class="item-type">CSS Flexbox</td>
+                        <td class="item-desc">Row flexbox container displaying the Nifty index chart and option charts side-by-side.</td>
+                    </tr>
+                    <tr>
+                        <td><code>.calendar-cell</code></td>
+                        <td class="item-type">CSS Layout</td>
+                        <td class="item-desc">Tile representing a calendar day, highlighted with unique state colors.</td>
+                    </tr>
+                    <tr>
+                        <td><code>.cell-dots</code></td>
+                        <td class="item-type">CSS Layout</td>
+                        <td class="item-desc">Horizontal dot row container positioned at the bottom of calendar day cells.</td>
+                    </tr>
+                    <tr>
+                        <td><code>.dot-option</code></td>
+                        <td class="item-type">CSS Indicator</td>
+                        <td class="item-desc">Blue color dot indicator representing presence of options master contracts data.</td>
+                    </tr>
+                    <tr>
+                        <td><code>.dot-nifty</code></td>
+                        <td class="item-type">CSS Indicator</td>
+                        <td class="item-desc">Orange color dot indicator representing presence of underlying Nifty index HOLC data.</td>
+                    </tr>
+                    <tr>
+                        <td><code>OptionCharAnalysis.html</code></td>
+                        <td class="item-type">HTML Template</td>
+                        <td class="item-desc">Layout displaying option chain grids and underlying index and options charts.</td>
+                    </tr>
+                    <tr>
+                        <td><code>/day_range</code></td>
+                        <td class="item-type">API Endpoint</td>
+                        <td class="item-desc">Queries SQLite to return Nifty index price ranges and options strikes coverage details for a given date.</td>
+                    </tr>
+                    <tr>
+                        <td><code>showDayPopup(dateKey)</code></td>
+                        <td class="item-type">JS Function</td>
+                        <td class="item-desc">Constructs and displays a modal popup card with index range metadata when clicking a calendar day.</td>
+                    </tr>
+                    <tr>
+                        <td><code>.popup-overlay</code></td>
+                        <td class="item-type">CSS Class</td>
+                        <td class="item-desc">Z-indexed dark blur background overlay element covering the screen behind active popups.</td>
+                    </tr>
+                    <tr>
+                        <td><code>.popup-card</code></td>
+                        <td class="item-type">CSS Class</td>
+                        <td class="item-desc">Styled card container positioning database range numbers, loader, and jump buttons.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

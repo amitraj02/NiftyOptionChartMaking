@@ -1,89 +1,371 @@
 <div class="container" id="basicStructureContainer">
     <div class="header">
-        <h2>Basic Structure</h2>
+        <h2>Basic : project workflow diagram</h2>
     </div>
     <div>
 
-        <div class="container">
+        <div class="projectWorkFlow">
 
-            <!-- Top Section -->
-            <div class="top-section">
+            <!-- Section 1: Architecture Overview -->
+            <div class="wf-section">
+                <h3 class="wf-section-title">🏗️ Architecture Overview</h3>
+                <p class="wf-description">The app is a <strong>Single Page Application (SPA)</strong> with a Python backend serving static files + 4 API endpoints that query SQLite.</p>
+                <div class="mermaid">
+graph TB
+    subgraph Browser["🌐 Browser - SPA"]
+        INDEX["index.html\nShell: Header + Nav + Footer"]
+        ROUTER["router.js\nHash-based Router"]
+        MAINBODY["#mainbody div\nTemplate injection"]
+    end
 
-                <!-- Option Chain -->
-                <div class="option-chain">
-                    <!-- Row 1: Calls -->
-                    <div class="option-chain-cell call-cell">Call-3</div>
-                    <div class="option-chain-cell call-cell">Call-2</div>
-                    <div class="option-chain-cell call-cell">Call-1</div>
-                    <div class="option-chain-cell call-cell">Call</div>
-                    <div class="option-chain-cell call-cell">Call+1</div>
-                    <div class="option-chain-cell call-cell">Call+2</div>
-                    <div class="option-chain-cell call-cell">Call+3</div>
+    subgraph Templates["📄 Templates injected into #mainbody"]
+        HOME["home.html"]
+        BASIC["basicStructure.html"]
+        CODE["codeHelp.html"]
+        DBHOME["DBhomePage.html"]
+        DBCAL["DBcalander.html"]
+        ANALYSIS["OptionCharAnalysis.html"]
+    end
 
-                    <!-- Row 2: Strikes -->
-                    <div class="option-chain-cell strike-cell">ATM-3</div>
-                    <div class="option-chain-cell strike-cell">ATM-2</div>
-                    <div class="option-chain-cell strike-cell">ATM-1</div>
-                    <div class="option-chain-cell strike-cell font-bold">ATM</div>
-                    <div class="option-chain-cell strike-cell">ATM+1</div>
-                    <div class="option-chain-cell strike-cell">ATM+2</div>
-                    <div class="option-chain-cell strike-cell">ATM+3</div>
+    subgraph Server["🖥️ Python Server port 8000"]
+        HANDLER["server.py\nProxyHandler"]
+        STATIC["Static File Serving"]
+        API_DB["/db_info"]
+        API_AD["/analysis_details"]
+        API_CD["/chart_data"]
+        API_DR["/day_range"]
+        API_PROXY["/api/* Dhan API Proxy"]
+    end
 
-                    <!-- Row 3: Puts -->
-                    <div class="option-chain-cell put-cell">Put-3</div>
-                    <div class="option-chain-cell put-cell">Put-2</div>
-                    <div class="option-chain-cell put-cell">Put-1</div>
-                    <div class="option-chain-cell put-cell">Put</div>
-                    <div class="option-chain-cell put-cell">Put+1</div>
-                    <div class="option-chain-cell put-cell">Put+2</div>
-                    <div class="option-chain-cell put-cell">Put+3</div>
+    subgraph Data["💾 Data Layer"]
+        SQLITE["LocalDatabase.db 85MB"]
+        OPT_TABLE["option_master\n540K rows"]
+        NIFTY_TABLE["nifty_50_holc\n206K rows"]
+        CSV["NIFTY_2024/25/26.csv\nTrading day calendars"]
+    end
+
+    INDEX --> ROUTER
+    ROUTER -->|"fetch template"| MAINBODY
+    MAINBODY --> HOME
+    MAINBODY --> BASIC
+    MAINBODY --> CODE
+    MAINBODY --> DBHOME
+    MAINBODY --> DBCAL
+    MAINBODY --> ANALYSIS
+
+    ROUTER -->|"fetch /db_info"| API_DB
+    ROUTER -->|"fetch /analysis_details"| API_AD
+    ROUTER -->|"fetch /chart_data"| API_CD
+    ROUTER -->|"fetch /day_range"| API_DR
+
+    API_DB --> SQLITE
+    API_AD --> SQLITE
+    API_CD --> SQLITE
+    API_DR --> SQLITE
+    SQLITE --> OPT_TABLE
+    SQLITE --> NIFTY_TABLE
+    STATIC --> CSV
+
+    HANDLER --> STATIC
+    HANDLER --> API_DB
+    HANDLER --> API_AD
+    HANDLER --> API_CD
+    HANDLER --> API_DR
+    HANDLER --> API_PROXY
+                </div>
+            </div>
+
+            <!-- Section 2: User Navigation Flow -->
+            <div class="wf-section">
+                <h3 class="wf-section-title">🧭 User Navigation Flow</h3>
+                <p class="wf-description">Main user journey through the application pages:</p>
+                <div class="mermaid">
+flowchart LR
+    START["🏠 #home"] --> NAV{"Navigation"}
+    NAV -->|"Code Help"| CH["#codeHelp\nReference docs"]
+    NAV -->|"Basic Structure"| BS["#basicStructure\nWorkflow diagram"]
+    NAV -->|"DB Home Page"| DBH["#DBhomePage\nDB stats dashboard"]
+
+    DBH -->|"View Calendar"| DBC["#DBcalander?year=2026\nMonthly calendar view"]
+    DBC -->|"Click a date"| POPUP["📋 Day Popup\n/day_range?date=..."]
+    POPUP -->|"Analysis Chart btn"| OCA["#OptionCharAnalysis?date=...\nAnalysis page"]
+
+    OCA --> NIFTY["📈 Nifty Chart"]
+    OCA --> CALL["📈 Call Chart"]
+    OCA --> PUT["📈 Put Chart"]
+    OCA --> CHAIN["📊 Option Chain Grid"]
+                </div>
+            </div>
+
+            <!-- Section 3: SPA Router Logic -->
+            <div class="wf-section">
+                <h3 class="wf-section-title">🔀 SPA Router Logic</h3>
+                <p class="wf-description">Hash-based routing in <code>router.js</code> — listens for hash changes, fetches templates, injects HTML:</p>
+                <div class="mermaid">
+flowchart TD
+    HASH["window.location.hash changes"] --> PARSE["Parse hash + query params"]
+    PARSE --> LOOKUP["Lookup route in routes map"]
+    LOOKUP --> FETCH["fetch template.html"]
+    FETCH --> INJECT["#mainbody.innerHTML = html"]
+    INJECT --> ROUTE{"Which route?"}
+
+    ROUTE -->|"#home"| R1["renderHome"]
+    ROUTE -->|"#DBhomePage"| R2["fetchDBInfo\nGET /db_info"]
+    ROUTE -->|"#DBcalander"| R3["fetchTradingDays year\n+ renderDBCalendar"]
+    ROUTE -->|"#OptionCharAnalysis"| R4["Load analysis data\n+ render charts"]
+
+    R4 --> R4A["GET /analysis_details?date=\npopulate option chain"]
+    R4A --> R4B["loadNiftyChart date\nGET /chart_data?type=nifty"]
+    R4A --> R4C["loadOptionChart CE\nGET /chart_data?type=option"]
+    R4A --> R4D["loadOptionChart PE\nGET /chart_data?type=option"]
                 </div>
 
-                <!-- Charts -->
-                <div class="chart-section">
-                    <div class="chart-column nifty-column">
-                        <div class="nifty-chart">
-                            Nifty Chart:<span id="niftychartinfo"> like :date  </span>
-                            <span id="niftychart">niftychart size: 500 x 400</span>
-                        </div>
-                        <div class="nifty-chart-bottom-note"> size:500 x 200 ,  some bottom note for nifty chart </div>
+                <!-- Route Map Table -->
+                <h4 class="wf-subtitle">Route Map</h4>
+                <table class="wf-table">
+                    <thead>
+                        <tr>
+                            <th>Hash</th>
+                            <th>Template File</th>
+                            <th>Post-load Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>#home</code> / <code>#</code> / <code>""</code></td>
+                            <td>home.html</td>
+                            <td>renderHome()</td>
+                        </tr>
+                        <tr>
+                            <td><code>#codeHelp</code></td>
+                            <td>codeHelp.html</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td><code>#basicStructure</code></td>
+                            <td>basicStructure.html</td>
+                            <td>None</td>
+                        </tr>
+                        <tr>
+                            <td><code>#DBhomePage</code></td>
+                            <td>DBhomePage.html</td>
+                            <td>fetchDBInfo()</td>
+                        </tr>
+                        <tr>
+                            <td><code>#DBcalander</code></td>
+                            <td>DBcalander.html</td>
+                            <td>fetchTradingDays() + renderDBCalendar()</td>
+                        </tr>
+                        <tr>
+                            <td><code>#OptionCharAnalysis</code></td>
+                            <td>OptionCharAnalysis.html</td>
+                            <td>Analysis + chart loading</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Section 4: Server API Endpoints -->
+            <div class="wf-section">
+                <h3 class="wf-section-title">🔌 Server API Endpoints</h3>
+                <p class="wf-description"><code>server.py</code> — Python HTTP server with CORS support and SQLite queries:</p>
+
+                <table class="wf-table">
+                    <thead>
+                        <tr>
+                            <th>Endpoint</th>
+                            <th>Params</th>
+                            <th>Returns</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>/db_info</code></td>
+                            <td>—</td>
+                            <td>Total entries, indexes, strikes, dates, expiries</td>
+                        </tr>
+                        <tr>
+                            <td><code>/analysis_details</code></td>
+                            <td><code>date</code></td>
+                            <td>ATM strike, 7 strikes array, CE/PE presence map</td>
+                        </tr>
+                        <tr>
+                            <td><code>/chart_data</code></td>
+                            <td><code>date</code>, <code>type</code>, <code>strike?</code>, <code>option_type?</code></td>
+                            <td>Array of OHLCV candles (+ delta/gamma for options)</td>
+                        </tr>
+                        <tr>
+                            <td><code>/day_range</code></td>
+                            <td><code>date</code></td>
+                            <td>Nifty min/max, strike min/max, data presence flags</td>
+                        </tr>
+                        <tr>
+                            <td><code>/api/*</code></td>
+                            <td>—</td>
+                            <td>Proxy to api.dhan.co (for live trading)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="mermaid">
+flowchart LR
+    subgraph Endpoints
+        E1["GET /db_info"]
+        E2["GET /analysis_details?date="]
+        E3["GET /chart_data?date= type="]
+        E4["GET /day_range?date="]
+        E5["GET /api/* Dhan proxy"]
+    end
+
+    subgraph Queries["SQLite Queries"]
+        Q1["COUNT from both tables\nDISTINCT index, strike, date, expiry"]
+        Q2["Last close for ATM calc\n7 strikes CE/PE presence"]
+        Q3A["nifty: SELECT OHLCV\nFROM nifty_50_holc"]
+        Q3B["option: SELECT OHLCV delta gamma\nFROM option_master"]
+        Q4["MIN/MAX strike\nMIN low MAX high"]
+    end
+
+    E1 --> Q1
+    E2 --> Q2
+    E3 --> Q3A
+    E3 --> Q3B
+    E4 --> Q4
+                </div>
+            </div>
+
+            <!-- Section 5: Chart Rendering Pipeline -->
+            <div class="wf-section">
+                <h3 class="wf-section-title">📈 Chart Rendering Pipeline</h3>
+                <p class="wf-description">Data flows through filtering, parsing, and deduplication before rendering with LightweightCharts:</p>
+                <div class="mermaid">
+flowchart TD
+    DATA["JSON candles from server"] --> FILTER["Filter null OHLC values"]
+    FILTER --> PARSE["Parse date+time to Unix timestamp"]
+    PARSE --> SORT["Sort by timestamp"]
+    SORT --> DEDUP["Remove duplicate timestamps"]
+    DEDUP --> TYPE{"Chart type?\nradio button"}
+
+    TYPE -->|"Line"| AREA["AreaSeries\nNifty: orange #ed963f\nOptions: green #26a69a"]
+    TYPE -->|"Candlestick"| CANDLE["CandlestickSeries\nUp: #26a69a\nDown: #ef5350"]
+
+    AREA --> RENDER["LightweightCharts render\nDark theme #1E222D"]
+    CANDLE --> RENDER
+
+    TOGGLE["Radio button change"] -->|"Re-render same data"| TYPE
+                </div>
+            </div>
+
+            <!-- Section 6: Data Sequence Diagram -->
+            <div class="wf-section">
+                <h3 class="wf-section-title">🔄 Full Data Flow Sequence</h3>
+                <p class="wf-description">Complete sequence from calendar click to chart rendering:</p>
+                <div class="mermaid">
+sequenceDiagram
+    participant U as User
+    participant B as Browser SPA
+    participant S as Python Server
+    participant DB as SQLite
+
+    U->>B: Navigate to #DBcalander?year=2026
+    B->>S: GET /db_info
+    S->>DB: Query dates, strikes, indexes
+    DB-->>S: JSON response
+    S-->>B: dates, nifty_dates, etc
+    B->>B: Render calendar with dots
+
+    U->>B: Click date cell - popup
+    B->>S: GET /day_range?date=2026-01-09
+    S->>DB: MIN/MAX strike and nifty
+    DB-->>S: Range data
+    S-->>B: nifty_min, nifty_max, etc
+    B->>B: Show popup with details
+
+    U->>B: Click Analysis Chart
+    B->>B: hash to #OptionCharAnalysis?date=2026-01-09
+    B->>S: GET /analysis_details?date=2026-01-09
+    S->>DB: Close price for ATM, 7 strikes presence
+    S-->>B: atm 25550, strikes, presence
+    B->>B: Populate option chain grid
+
+    par Parallel chart loads
+        B->>S: GET /chart_data?type=nifty
+        S->>DB: SELECT OHLCV FROM nifty_50_holc
+        S-->>B: Candles array
+        B->>B: drawChart niftychart
+    and
+        B->>S: GET /chart_data?type=option strike=25550 CE
+        S-->>B: CE candles
+        B->>B: drawChart callchart
+    and
+        B->>S: GET /chart_data?type=option strike=25550 PE
+        S-->>B: PE candles
+        B->>B: drawChart putchart
+    end
+                </div>
+            </div>
+
+            <!-- Section 7: File Structure -->
+            <div class="wf-section">
+                <h3 class="wf-section-title">📁 File Structure</h3>
+                <div class="wf-file-tree">
+<pre>
+NiftyOptionChartMaking/
+├── <span class="ft-server">server.py</span>                    ← Python HTTP server + API handlers
+├── <span class="ft-folder">database/</span>
+│   ├── <span class="ft-db">LocalDatabase.db</span>         ← SQLite (85MB) — main data store
+│   ├── <span class="ft-data">NIFTY_2024/25/26.csv</span>     ← Trading day calendars
+│   ├── <span class="ft-data">NIFTY_HOLC.csv</span>           ← Intraday OHLC (50MB)
+│   └── <span class="ft-config">env.txt</span>                  ← Config/credentials
+├── <span class="ft-folder">templets/</span>
+│   ├── <span class="ft-html">index.html</span>               ← SPA shell (header + nav + #mainbody + footer)
+│   ├── <span class="ft-html">home.html</span>                ← Home page template
+│   ├── <span class="ft-html">DBhomePage.html</span>          ← Database stats dashboard
+│   ├── <span class="ft-html">DBcalander.html</span>          ← Calendar view template
+│   ├── <span class="ft-html">OptionCharAnalysis.html</span>  ← Analysis page (charts + option chain)
+│   ├── <span class="ft-html">basicStructure.html</span>      ← This page (workflow diagram)
+│   ├── <span class="ft-html">codeHelp.html</span>            ← Code reference docs
+│   └── <span class="ft-html">404.html</span>                 ← Error page
+├── <span class="ft-folder">js/</span>
+│   ├── <span class="ft-js">router.js</span>                ← SPA router + all page logic (27KB)
+│   ├── <span class="ft-js">clientInfo.js</span>            ← Client utilities
+│   └── <span class="ft-data">chartCreateCode.txt</span>      ← Chart code reference
+├── <span class="ft-folder">css/</span>
+│   ├── <span class="ft-css">index.css</span>                ← Main layout styles (14KB)
+│   ├── <span class="ft-css">basicStructure.css</span>       ← Analysis page styles
+│   ├── <span class="ft-css">home.css</span>                 ← Home page styles
+│   └── <span class="ft-css">style.css</span>                ← Base/shared styles
+└── <span class="ft-server">get_holdings.py</span>              ← Holdings fetch script (Dhan API)
+</pre>
+                </div>
+            </div>
+
+            <!-- Section 8: Database Summary -->
+            <div class="wf-section">
+                <h3 class="wf-section-title">💾 Database Summary</h3>
+                <div class="wf-cards-row">
+                    <div class="wf-card wf-card-blue">
+                        <h4>option_master</h4>
+                        <div class="wf-card-stat">540,215 rows</div>
+                        <ul>
+                            <li>Indexes: NIFTY, SENSEX, BANKNIFTY</li>
+                            <li>Date range: 2025-11-13 → 2026-06-25</li>
+                            <li>74 unique trading days</li>
+                            <li>154 unique strikes (22,750 → 85,800)</li>
+                            <li>Option types: CE, PE</li>
+                            <li>Columns: OHLCV + delta + gamma</li>
+                        </ul>
                     </div>
-
-                    <div class="chart-column call-put-column">
-                        <div class="call-chart">
-                            Call Chart :<span id="callchartinfo">  like :strike+date+ce</span>
-                            <span id="callchart">callchart size: 500 x 300</span>
-                        </div>
-
-                        <div class="put-chart">
-                            Put Chart :<span id="putchartinfo"> like:strike+date+pe</span>
-                            <span id="putchart">putchart size: 500 x 300</span>
-                        </div>
+                    <div class="wf-card wf-card-orange">
+                        <h4>nifty_50_holc</h4>
+                        <div class="wf-card-stat">206,397 rows</div>
+                        <ul>
+                            <li>Date range: 2024-01-01 → 2026-03-20</li>
+                            <li>553 unique trading days</li>
+                            <li>Minute-level OHLCV data</li>
+                            <li>Nifty 50 index only</li>
+                        </ul>
                     </div>
                 </div>
-
-                <!-- Script List -->
-                <div class="script-list">
-                    Scripts List : <select name="scriptList" id="scriptList">
-                        <option value="swing_low">swing_low</option>
-                        <option value="twoPM">twoPM</option>
-                        <option value="otherone">otherone</option>
-                    </select>
-                    <!-- Scripts List ul> 1. swing_low, 2. twoPM 3. otherone :with check box  -->
-                    <label><input type="checkbox"> swing_low</label>
-                    <label><input type="checkbox"> twoPM</label>
-                    <label><input type="checkbox"> otherone</label>
-                </div>
-
-                <!-- Result -->
-                <div class="result-section">
-                    <h4>Result</h4>
-
-                    <div class="result-box">
-                        Show test result here...
-                    </div>
-                </div>
-
             </div>
 
         </div>

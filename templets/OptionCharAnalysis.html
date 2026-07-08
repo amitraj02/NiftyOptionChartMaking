@@ -1,6 +1,11 @@
 <div class="container" id="basicStructureContainer">
     <div class="header">
-        <h2>Basic Structure</h2>
+        <h2>Basic Structure Analysis:</h2>
+        <div class="header-meta">
+            <span id="indexName">index: </span>
+            <span id="date">date: </span>
+            <span id="range_of_data">range_of_index data: </span>
+        </div>
     </div>
     <div>
 
@@ -10,54 +15,75 @@
             <div class="top-section">
 
                 <!-- Option Chain -->
-                <div class="option-chain">
-                    <!-- Row 1: Calls -->
-                    <div class="option-chain-cell call-cell">Call-3</div>
-                    <div class="option-chain-cell call-cell">Call-2</div>
-                    <div class="option-chain-cell call-cell">Call-1</div>
-                    <div class="option-chain-cell call-cell">Call</div>
-                    <div class="option-chain-cell call-cell">Call+1</div>
-                    <div class="option-chain-cell call-cell">Call+2</div>
-                    <div class="option-chain-cell call-cell">Call+3</div>
-
-                    <!-- Row 2: Strikes -->
-                    <div class="option-chain-cell strike-cell">ATM-3</div>
-                    <div class="option-chain-cell strike-cell">ATM-2</div>
-                    <div class="option-chain-cell strike-cell">ATM-1</div>
-                    <div class="option-chain-cell strike-cell font-bold">ATM</div>
-                    <div class="option-chain-cell strike-cell">ATM+1</div>
-                    <div class="option-chain-cell strike-cell">ATM+2</div>
-                    <div class="option-chain-cell strike-cell">ATM+3</div>
-
-                    <!-- Row 3: Puts -->
-                    <div class="option-chain-cell put-cell">Put-3</div>
-                    <div class="option-chain-cell put-cell">Put-2</div>
-                    <div class="option-chain-cell put-cell">Put-1</div>
-                    <div class="option-chain-cell put-cell">Put</div>
-                    <div class="option-chain-cell put-cell">Put+1</div>
-                    <div class="option-chain-cell put-cell">Put+2</div>
-                    <div class="option-chain-cell put-cell">Put+3</div>
+                <div class="option-chain" aria-label="Option chain" style="width: 320px; font-size:xx-small;">
+                    <div class="option-chain-row option-chain-header">
+                        <div class="option-chain-cell header-cell">Calls</div>
+                        <div class="option-chain-cell header-cell">Strike</div>
+                        <div class="option-chain-cell header-cell">Puts</div>
+                    </div>
+                    <div class="option-chain-row">
+                        <div class="option-chain-cell call-cell" id="call-0">-</div>
+                        <div class="option-chain-cell strike-cell" id="strike-0">-</div>
+                        <div class="option-chain-cell put-cell" id="put-0">-</div>
+                    </div>
+                    <div class="option-chain-row">
+                        <div class="option-chain-cell call-cell" id="call-1">-</div>
+                        <div class="option-chain-cell strike-cell" id="strike-1">-</div>
+                        <div class="option-chain-cell put-cell" id="put-1">-</div>
+                    </div>
+                    <div class="option-chain-row">
+                        <div class="option-chain-cell call-cell" id="call-2">-</div>
+                        <div class="option-chain-cell strike-cell" id="strike-2">-</div>
+                        <div class="option-chain-cell put-cell" id="put-2">-</div>
+                    </div>
+                    <div class="option-chain-row">
+                        <div class="option-chain-cell call-cell" id="call-3">-</div>
+                        <div class="option-chain-cell strike-cell" id="strike-3">-</div>
+                        <div class="option-chain-cell put-cell" id="put-3">-</div>
+                    </div>
+                    <div class="option-chain-row">
+                        <div class="option-chain-cell call-cell" id="call-4">-</div>
+                        <div class="option-chain-cell strike-cell" id="strike-4">-</div>
+                        <div class="option-chain-cell put-cell" id="put-4">-</div>
+                    </div>
+                    <div class="option-chain-row">
+                        <div class="option-chain-cell call-cell" id="call-5">-</div>
+                        <div class="option-chain-cell strike-cell" id="strike-5">-</div>
+                        <div class="option-chain-cell put-cell" id="put-5">-</div>
+                    </div>
+                    <div class="option-chain-row">
+                        <div class="option-chain-cell call-cell" id="call-6">-</div>
+                        <div class="option-chain-cell strike-cell" id="strike-6">-</div>
+                        <div class="option-chain-cell put-cell" id="put-6">-</div>
+                    </div>
                 </div>
 
                 <!-- Charts -->
                 <div class="chart-section">
-                    <div class="chart-column nifty-column">
-                        <div class="nifty-chart">
-                            Nifty Chart:<span id="niftychartinfo"> like :date  </span>
-                            <span id="niftychart">niftychart size: 500 x 400</span>
+                    <div class="chart-column">
+                        <div class="IndexChart">
+                            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+                                <span id="dateofChart">Index chart</span>
+                                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                    <label style="font-size:0.9rem;"><input type="radio" name="indexChartInterval" value="1" checked> 1 min</label>
+                                    <label style="font-size:0.9rem;"><input type="radio" name="indexChartInterval" value="3"> 3 min</label>
+                                    <label style="font-size:0.9rem;"><input type="radio" name="indexChartInterval" value="5"> 5 min</label>
+                                    <button id="showIndexChartBtn" type="button">Show Chart</button>
+                                </div>
+                            </div>
+                            <div id="showIndexChart" style="width: 100%; height: 250px;"></div>
                         </div>
-                        <div class="nifty-chart-bottom-note"> size:500 x 200 ,  some bottom note for nifty chart </div>
-                    </div>
 
-                    <div class="chart-column call-put-column">
                         <div class="call-chart">
-                            Call Chart :<span id="callchartinfo">  like :strike+date+ce</span>
-                            <span id="callchart">callchart size: 500 x 300</span>
+                            Call Chart : 
+
+                            <div id="callchart" style="width: 100%; height: 250px;"></div>
                         </div>
 
                         <div class="put-chart">
-                            Put Chart :<span id="putchartinfo"> like:strike+date+pe</span>
-                            <span id="putchart">putchart size: 500 x 300</span>
+                            Put Chart : 
+
+                            <div id="putchart" style="width: 100%; height: 250px;"></div>
                         </div>
                     </div>
                 </div>
