@@ -65,3 +65,18 @@ Exit	Exit Price	Sell Price	✅	❌	✅
 Trade Notes	Entry Reason	Why Trade Taken	✅	✅	❌
 	Mistake	Yes/No	Optional	❌	Analysis
 	Screenshot	Chart Image	Optional	❌	Review
+
+
+---------------------------------------------------------------------
+Trading Algorithm Efficiency & P&L Checklist
+Category	Checklist Metric	Formula / Standard	Acceptable Benchmark	P&L Perspective / Risk Vector
+Composition	Profit Factor	Gross Profit / Gross Loss	1.5 to 2.5	If < 1.1, execution costs wipe you out. If > 4.0, look for look-ahead bias or extreme overfitting.
+Composition	Win/Loss Sizing	Avg Win Size / Avg Loss Size	Dynamic balance	High win rates (e.g., 80%) are structural traps if the rare losses are exponentially larger than average wins.
+Magnitude	Profit Expectancy	(Win% * AvgWin) - (Loss% * AvgLoss)	Significantly > 0	Expected net payout per trade. If your edge is too thin, minor market slippage or latency flips the strategy negative.
+Volatility	Maximum Drawdown (Max DD)	Peak to Trough Equity Drop	< 15% - 20%	Measures maximum historical capital erosion. Determines if your account or emotions can survive the losing streaks.
+Volatility	Recovery Factor	Net Profit / Max Drawdown	> 3.0	Evaluates speed and structural efficiency of your algorithm climbing back to equity highs after a drawdown period.
+Friction	Friction Deductions	Gross P&L - Fees - Slippage	Applied per trade	Keeps your backtest honest. Ensures you are not trading "phantom profits" missing real-world brokerage/slippage realities.
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
