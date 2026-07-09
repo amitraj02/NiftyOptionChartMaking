@@ -56,7 +56,13 @@
             const timeSpan = document.getElementById('headerTime');
             if (timeSpan) {
                 const now = new Date();
-                timeSpan.textContent = now.toLocaleTimeString();
+                const formatted = now.toLocaleString('en-IN', {
+                    timeZone: 'Asia/Kolkata',
+                    dateStyle: 'medium',
+                    timeStyle: 'medium',
+                    hour12: true
+                });
+                timeSpan.textContent = formatted.toUpperCase();
             }
         }
         setInterval(updateClock, 1000);

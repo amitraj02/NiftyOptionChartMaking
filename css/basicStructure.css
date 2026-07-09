@@ -145,8 +145,8 @@
 /* Charts Styles */
 .chart-section {
     display: flex;
-    flex-direction: row;
-    gap: 1px;
+    flex-direction: column;
+    gap: 16px;
     width: 100%;
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -156,7 +156,8 @@
 
 .chart-column {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 16px;
     width: 100%;
 }
 
@@ -165,16 +166,15 @@
 }
 
 @media (max-width: 767px) {
-    .chart-section {
-        flex-direction: column;
-    }
     .chart-column {
-        width: 100%;
+        flex-direction: column;
     }
 }
 
 .call-chart,
 .put-chart {
+    flex: 1;
+    min-width: 0;
     background-color: var(--bg-main);
     border: 1px solid var(--border-color);
     border-radius: 8px;
@@ -265,7 +265,8 @@
 /* Option Chain Highlights & Interaction */
 .call-cell.present,
 .put-cell.present {
-    background-color: #10b981 !important; /* Premium Green */
+    background-color: #10b981 !important;
+    /* Premium Green */
     color: #ffffff !important;
     border: 1.5px solid #059669 !important;
     font-weight: 700 !important;
@@ -426,14 +427,41 @@
     white-space: pre;
 }
 
-.ft-folder { color: #60a5fa; font-weight: 600; }
-.ft-server { color: #10b981; font-weight: 600; }
-.ft-html { color: #f59e0b; }
-.ft-js { color: #a78bfa; }
-.ft-css { color: #ec4899; }
-.ft-db { color: #ef4444; font-weight: 600; }
-.ft-data { color: #6ee7b7; }
-.ft-config { color: #94a3b8; font-style: italic; }
+.ft-folder {
+    color: #60a5fa;
+    font-weight: 600;
+}
+
+.ft-server {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.ft-html {
+    color: #f59e0b;
+}
+
+.ft-js {
+    color: #a78bfa;
+}
+
+.ft-css {
+    color: #ec4899;
+}
+
+.ft-db {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.ft-data {
+    color: #6ee7b7;
+}
+
+.ft-config {
+    color: #94a3b8;
+    font-style: italic;
+}
 
 /* Database Info Cards */
 .wf-cards-row {
@@ -467,8 +495,13 @@
     font-weight: 700;
 }
 
-.wf-card-blue h4 { color: #60a5fa; }
-.wf-card-orange h4 { color: #f59e0b; }
+.wf-card-blue h4 {
+    color: #60a5fa;
+}
+
+.wf-card-orange h4 {
+    color: #f59e0b;
+}
 
 .wf-card-blue {
     border-top: 3px solid #3b82f6;

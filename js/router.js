@@ -1,7 +1,15 @@
+/**
+ * Navigates the application hash-route to the database calendar page for a specific year.
+ * @param {number|string} year - The target year for the calendar.
+ */
 window.openDBcalander = (year) => {
     window.location.hash = `#DBcalander?year=${year}`;
 };
 
+/**
+ * Application routing map linking hashes to HTML template paths.
+ * Empty or '#' hash redirects to the main 'home.html' page.
+ */
 const routes = {
     404: "404.html",
     "": "home.html",
@@ -16,6 +24,12 @@ const routes = {
     "#OptionCharAnalysis": "OptionCharAnalysis.html",
 };
 
+/**
+ * Reads NIFTY trading days CSV for the given year, parsing them into a set of date strings.
+ * CSV path: `../database/NIFTY_<year>.csv`
+ * @param {number|string} year - The year to fetch the trading days for.
+ * @returns {Promise<Set<string>|null>} A Set of 'YYYY-MM-DD' formatted dates, or null on error.
+ */
 const fetchTradingDays = async (year) => {
     try {
         const response = await fetch(`../database/NIFTY_${year}.csv`);
@@ -53,6 +67,13 @@ const fetchTradingDays = async (year) => {
     }
 };
 
+/**
+ * Dynamic calendar UI builder. Renders 12 months with specific color codes representing
+ * trading days, weekends, holidays, option presence, and nifty index data presence.
+ * @param {number|string} year - Calendar target year.
+ * @param {Set<string>} tradingDays - Set of active trading dates.
+ * @param {Object} dbInfo - Database metadata containing dates with stored data.
+ */
 const renderDBCalendar = (year, tradingDays, dbInfo) => {
     const container = document.querySelector(".DBcontainer");
     if (!container) return;
@@ -189,6 +210,10 @@ const renderDBCalendar = (year, tradingDays, dbInfo) => {
     }
 };
 
+/**
+ * Fetches general SQLite database statistics from the backend server (/db_info)
+ * and updates summary tiles on the DB Home page.
+ */
 const fetchDBInfo = async () => {
     try {
         const response = await fetch("../db_info");
@@ -253,6 +278,10 @@ const fetchDBInfo = async () => {
     }
 };
 
+/**
+ * Core Router controller. Listens to URL hash changes, parses potential query parameters,
+ * loads respective HTML template files, and executes associated page setup functions.
+ */
 const handleLocation = async () => {
     let path = window.location.hash;
     if (path.length === 0) { path = "#home"; }
@@ -461,6 +490,11 @@ const handleLocation = async () => {
     }
 };
 
+/**
+ * Renders a modal popup detailing database records, price boundaries, and index properties
+ * for a specific date selected on the calendar page.
+ * @param {string} dateKey - Selected date string (format YYYY-MM-DD).
+ */
 const showDayPopup = async (dateKey) => {
     let overlay = document.getElementById("calendar-popup-overlay");
     if (!overlay) {
@@ -585,6 +619,12 @@ let lastPutData = [];
 
 window.chartInstances = window.chartInstances || {};
 
+/**
+ * Resamples raw 1-minute OHLC candlestick data into larger duration intervals (e.g. 5m, 15m, 30m).
+ * @param {Array<Object>} candles - Original candle objects containing date, time, open, high, low, close, volume.
+ * @param {number|string} intervalMinutes - Target aggregation bucket interval.
+ * @returns {Array<Object>} Aggregated and chronologically sorted candlestick array.
+ */
 const resampleCandles = (candles, intervalMinutes) => {
     if (!Array.isArray(candles) || candles.length === 0) return [];
     const minute = Number(intervalMinutes) || 1;
@@ -624,6 +664,14 @@ const resampleCandles = (candles, intervalMinutes) => {
     });
 };
 
+/**
+ * Creates and initializes financial charts using the lightweight-charts library.
+ * Cleans up pre-existing instances on the same container before rendering a new series.
+ * @param {string} containerId - Target HTML div element ID.
+ * @param {Array<Object>} data - Candlestick/Area data array.
+ * @param {string} title - Chart title label.
+ * @param {boolean} isIndex - Renders candlestick chart if true; area chart otherwise.
+ */
 const drawChart = (containerId, data, title, isIndex) => {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -696,7 +744,7 @@ const drawChart = (containerId, data, title, isIndex) => {
                     hour: '2-digit',
                     minute: '2-digit',
                     hour12: false,
-                    timeZone: 'Asia/Kolkata'
+                    timeZone: 'UTC'
                 }).format(date);
             }
         },
@@ -707,7 +755,7 @@ const drawChart = (containerId, data, title, isIndex) => {
                     hour: '2-digit',
                     minute: '2-digit',
                     hour12: true,
-                    timeZone: 'Asia/Kolkata'
+                    timeZone: 'UTC'
                 }).format(date);
             }
         }
@@ -715,47 +763,37 @@ const drawChart = (containerId, data, title, isIndex) => {
     
     window.chartInstances[containerId] = chartInstance;
 
-    if (isIndex) {
-        const candlestickSeries = chartInstance.addCandlestickSeries({
-            upColor: '#26a69a',
-            downColor: '#ef5350',
-            borderDownColor: '#ef5350',
-            borderUpColor: '#26a69a',
-            wickDownColor: '#ef5350',
-            wickUpColor: '#26a69a',
-            priceFormat: {
-                type: 'price',
-                precision: 2,
-                minMove: 0.05,
-            }
-        });
-        candlestickSeries.setData(uniqueChartData.map(d => ({
-            time: d.time,
-            open: d.open,
-            high: d.high,
-            low: d.low,
-            close: d.close
-        })));
-    } else {
-        const color = '#26a69a';
-        const areaSeries = chartInstance.addAreaSeries({
-            title: title,
-            lineColor: color,
-            topColor: color, 
-            bottomColor: 'rgba(0, 0, 0, 0)', 
-            lineWidth: 2,
-            priceFormat: {
-                type: 'price',
-                precision: 2,
-                minMove: 0.05,
-            }
-        });
-        areaSeries.setData(uniqueChartData.map(d => ({ time: d.time, value: d.close })));
-    }
+    const candlestickSeries = chartInstance.addCandlestickSeries({
+        title: title,
+        upColor: '#26a69a',
+        downColor: '#ef5350',
+        borderDownColor: '#ef5350',
+        borderUpColor: '#26a69a',
+        wickDownColor: '#ef5350',
+        wickUpColor: '#26a69a',
+        priceFormat: {
+            type: 'price',
+            precision: 2,
+            minMove: 0.05,
+        }
+    });
+    candlestickSeries.setData(uniqueChartData.map(d => ({
+        time: d.time,
+        open: d.open,
+        high: d.high,
+        low: d.low,
+        close: d.close
+    })));
 
     chartInstance.timeScale().fitContent();
 };
 
+/**
+ * Fetches and renders index candlestick chart data from the backend server (/chart_data)
+ * for a specific date and aggregates it based on the selected interval radio buttons.
+ * @param {string} date - Nifty chart target date.
+ * @param {string} containerId - Target container element ID.
+ */
 const loadIndexChart = async (date, containerId = "showIndexChart") => {
     try {
         const res = await fetch(`../chart_data?date=${encodeURIComponent(date)}&type=nifty`);
@@ -772,6 +810,105 @@ const loadIndexChart = async (date, containerId = "showIndexChart") => {
     }
 };
 
+/**
+ * Updates the right-side option details panel with selected strike parameters,
+ * price ranges, volume, and Greeks (Delta & Gamma) calculated from the fetched candles.
+ * @param {number|string} strike - Selected strike price.
+ * @param {string} option_type - CE or PE.
+ * @param {Array<Object>} candles - Fetched candle array for the contract.
+ */
+const updateRightPanel = (strike, option_type, candles) => {
+    const rightPanel = document.getElementById("option-chain-right-panel");
+    if (!rightPanel) return;
+
+    if (!Array.isArray(candles) || candles.length === 0) {
+        rightPanel.innerHTML = `
+            <div style="text-align: center; color: var(--text-muted); width: 100%;">
+                <span style="font-size: 2rem; display: block; margin-bottom: 8px;">⚠️</span>
+                <strong style="color: var(--text-primary);">No Data Available</strong>
+                <p style="margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);">No option contract data found for ${strike} ${option_type}.</p>
+            </div>
+        `;
+        return;
+    }
+
+    const lastCandle = candles[candles.length - 1];
+    const firstCandle = candles[0];
+
+    const ltp = Number(lastCandle.close || 0).toFixed(2);
+    const open = Number(firstCandle.open || 0).toFixed(2);
+    const high = Math.max(...candles.map(c => Number(c.high || 0))).toFixed(2);
+    const low = Math.min(...candles.map(c => Number(c.low || 0))).toFixed(2);
+    const totalVolume = candles.reduce((sum, c) => sum + Number(c.volume || 0), 0).toLocaleString();
+    
+    const delta = lastCandle.delta != null ? Number(lastCandle.delta).toFixed(4) : "N/A";
+    const gamma = lastCandle.gamma != null ? Number(lastCandle.gamma).toFixed(6) : "N/A";
+
+    const change = Number(lastCandle.close || 0) - Number(firstCandle.open || 0);
+    const pctChange = ((change / (firstCandle.open || 1)) * 100).toFixed(2);
+    const isUp = change >= 0;
+    const changeColor = isUp ? "var(--color-call)" : "var(--color-put)";
+    const changeSign = isUp ? "+" : "";
+
+    const badgeColor = option_type === "CE" ? "var(--color-call)" : "var(--color-put)";
+    const badgeBg = option_type === "CE" ? "var(--color-call-bg)" : "var(--color-put-bg)";
+
+    rightPanel.style.display = "flex";
+    rightPanel.style.flexDirection = "column";
+    rightPanel.style.justifyContent = "flex-start";
+    rightPanel.style.alignItems = "stretch";
+    rightPanel.style.textAlign = "left";
+    rightPanel.style.color = "var(--text-primary)";
+
+    rightPanel.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border-color); padding-bottom: 8px; margin-bottom: 12px; width: 100%;">
+            <h3 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary);">Selected Option</h3>
+            <span style="background-color: ${badgeBg}; color: ${badgeColor}; border: 1px solid ${badgeColor}; padding: 2px 8px; border-radius: 6px; font-weight: bold; font-size: 0.75rem;">
+                ${strike} ${option_type}
+            </span>
+        </div>
+
+        <div style="margin-bottom: 12px; width: 100%;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Last Traded Price</div>
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 4px;">
+                <span style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">₹${ltp}</span>
+                <span style="color: ${changeColor}; font-weight: bold; font-size: 0.85rem;">
+                    ${changeSign}${change.toFixed(2)} (${changeSign}${pctChange}%)
+                </span>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; width: 100%;">
+            <div style="background-color: var(--bg-main); padding: 8px 10px; border-radius: 8px; border-left: 3px solid var(--color-accent); display: flex; flex-direction: column;">
+                <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Delta</span>
+                <span style="font-size: 1.0rem; font-weight: bold; color: var(--text-primary); margin-top: 2px;">${delta}</span>
+            </div>
+            <div style="background-color: var(--bg-main); padding: 8px 10px; border-radius: 8px; border-left: 3px solid var(--color-accent); display: flex; flex-direction: column;">
+                <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">Gamma</span>
+                <span style="font-size: 1.0rem; font-weight: bold; color: var(--text-primary); margin-top: 2px;">${gamma}</span>
+            </div>
+        </div>
+
+        <div style="background-color: var(--bg-main); padding: 10px; border-radius: 8px; border: 1px dashed var(--border-color); width: 100%;">
+            <div style="font-size: 0.75rem; font-weight: bold; color: var(--text-secondary); margin-bottom: 6px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Day Session Summary</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; font-size: 0.75rem;">
+                <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Open:</span> <strong style="color: var(--text-primary);">₹${open}</strong></div>
+                <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">High:</span> <strong style="color: var(--text-primary);">₹${high}</strong></div>
+                <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Low:</span> <strong style="color: var(--text-primary);">₹${low}</strong></div>
+                <div style="display: flex; justify-content: space-between;"><span style="color: var(--text-muted);">Vol:</span> <strong style="color: var(--text-primary);">${totalVolume}</strong></div>
+            </div>
+        </div>
+    `;
+};
+
+/**
+ * Fetches and renders area charts representing individual option contract prices (Call or Put)
+ * for a specific strike price and contract date.
+ * @param {string} date - Trade date.
+ * @param {number|string} strike - Selected strike price.
+ * @param {string} option_type - CE (Call) or PE (Put).
+ * @param {HTMLElement} cellElement - Option chain table cell clicked to trigger chart reload.
+ */
 const loadOptionChart = async (date, strike, option_type, cellElement) => {
     try {
         document.querySelectorAll(".option-chain-cell").forEach(c => c.classList.remove("active-selection"));
@@ -780,6 +917,9 @@ const loadOptionChart = async (date, strike, option_type, cellElement) => {
         const res = await fetch(`../chart_data?date=${encodeURIComponent(date)}&type=option&strike=${encodeURIComponent(strike)}&option_type=${encodeURIComponent(option_type)}`);
         if (!res.ok) throw new Error();
         const candles = await res.json();
+        
+        // Update the right-side option details and Greeks panel
+        updateRightPanel(strike, option_type, candles);
         
         if (option_type === "CE") {
             lastCallData = candles;
@@ -793,6 +933,9 @@ const loadOptionChart = async (date, strike, option_type, cellElement) => {
             drawChart("putchart", candles, `${strike} PE`, false);
         }
     } catch {
+        // Update the panel with empty/error state
+        updateRightPanel(strike, option_type, []);
+        
         if (option_type === "CE") {
             lastCallData = [];
             drawChart("callchart", [], `${strike} CE`, false);

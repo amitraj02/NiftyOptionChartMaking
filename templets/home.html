@@ -13,16 +13,22 @@
                 <td id="td-access-token">Loading...</td>
                 <td id="td-refresh-token">Loading...</td>
             </tr>
+        </table>
+    </div>
+    <div >
+        <table>
             <tr>
-                <!-- use this file to disply holdings here:.../NiftyOptionChartMaking/get_holdings.py -->
-                <td colspan="3" id="td-client-data" style="text-align: center;">Fetching data from Dhan...</td>
-                <td colspan="3" id="td-client-data2" style="text-align:right;">showing here Fetched data from Dhan...
-                    <div id="feched_json_in_html">
-                        <h3>feched_json will display here</h3>
-                        <div id="feched_json_div">
-
-                        </div>
-
+                <!-- <td colspan="3" id="td-client-data" style="text-align: center;">Fetching data from Dhan...</td> -->
+                <td colspan="3" id="td-client-data2" style="text-align:left; vertical-align: top;">
+                    <div id="feched_json_in_html" style="display: block; overflow: auto; width: 100%;max-height: 300px ;overflow-y:scroll;">
+                        <h3>Fetched JSON</h3>
+                        <div id="feched_json_div"></div>
+                    </div>
+                </td>
+                <td style="vertical-align: top;">
+                    <div>
+                        <h3>JSON Table</h3>
+                        <div id="json_data_table_div"></div>
                     </div>
                 </td>
             </tr>

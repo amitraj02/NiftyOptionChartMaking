@@ -113,10 +113,61 @@ window.renderHome = async function () {
     if (clientId && accessToken) {
         try {
             const holdingsResponse = await fetchDhanHoldings(clientId, accessToken);
-            const holdingsList = holdingsResponse.data || [];
+            
+            // 2a. Determine holdings list from different possible JSON structures returned by the Dhan API
+            // The API response may vary (an array, an object wrapping the array in .data, or a single holdings object).
+            let holdingsList = [];
+            if (Array.isArray(holdingsResponse)) {
+                // Direct array format: [ { exchange: 'NSE', ... } ]
+                holdingsList = holdingsResponse;
+            } else if (holdingsResponse && Array.isArray(holdingsResponse.data)) {
+                // Wrapped array format: { data: [ { exchange: 'NSE', ... } ] }
+                holdingsList = holdingsResponse.data;
+            } else if (holdingsResponse && typeof holdingsResponse === 'object') {
+                // Single object format (if only one holding exists and is not wrapped in an array)
+                if (holdingsResponse.tradingSymbol || holdingsResponse.securityId) {
+                    holdingsList = [holdingsResponse];
+                }
+            }
 
+            // 2b. Always render the raw JSON response in the designated container (for debugging/diagnostic purposes)
+            const fetchedJsonDiv = document.getElementById('feched_json_div');
+            if (fetchedJsonDiv) {
+                fetchedJsonDiv.innerHTML = `<pre style="white-space: pre-wrap; font-size: 0.8rem; margin: 0;">${JSON.stringify(holdingsResponse, null, 2)}</pre>`;
+            }
+
+            // 2c. Always render the holdings data in a clean, simplified HTML table inside the JSON table div
+            const jsonTableDiv = document.getElementById('json_data_table_div');
+            if (jsonTableDiv) {
+                const rows = holdingsList.map(stock => `
+                    <tr>
+                        <td>${stock.tradingSymbol || '-'}</td>
+                        <td>${stock.exchange || '-'}</td>
+                        <td>${stock.totalQty || 0}</td>
+                        <td>${stock.avgCostPrice != null ? `₹${Number(stock.avgCostPrice).toFixed(2)}` : '-'}</td>
+                        <td>${stock.lastTradedPrice != null ? `₹${Number(stock.lastTradedPrice).toFixed(2)}` : '-'}</td>
+                    </tr>
+                `).join('');
+
+                jsonTableDiv.innerHTML = `
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                        <thead>
+                            <tr style="background-color: var(--bg-main);">
+                                <th style="padding: 6px; text-align: left;">Symbol</th>
+                                <th style="padding: 6px; text-align: left;">Exchange</th>
+                                <th style="padding: 6px; text-align: right;">Qty</th>
+                                <th style="padding: 6px; text-align: right;">Avg Cost</th>
+                                <th style="padding: 6px; text-align: right;">LTP</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows || '<tr><td colspan="5" style="text-align: center; padding: 10px;">No holdings data available</td></tr>'}</tbody>
+                    </table>
+                `;
+            }
+
+            // 2d. Display main holdings table summary or show error message if no holdings list was parsed
             if (document.getElementById('td-client-data')) {
-                if (holdingsList.length === 0 || !Array.isArray(holdingsList)) {
+                if (holdingsList.length === 0) {
                     document.getElementById('td-client-data').innerHTML = `
                         <div style="padding: 20px; text-align: center; color: var(--text-secondary);">
                             No holdings found or failed to fetch.
